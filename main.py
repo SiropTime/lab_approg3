@@ -4,6 +4,7 @@ from constants import WELCOME_MESSAGE
 import sys
 
 
+# Correctly enter variables for function
 def enter_kwargs() -> dict:
     print("Enter variables (such as a, b, x) for expression in a row \n(a 5)\n(x 4) etc."
           "\nTo finish entering send empty string.")
@@ -23,11 +24,11 @@ def enter_kwargs() -> dict:
     return res_kwargs
 
 
-def main():
+def main() -> None:
     print(WELCOME_MESSAGE)
 
     while True:
-        print("Enter the math expression: ", sep="")
+        print("Enter the math expression: ", end="")
         expression = str(input())
 
         if not len(expression.split()):

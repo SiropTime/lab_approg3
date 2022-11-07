@@ -1,5 +1,5 @@
 from constants import *
-from stack import StackString
+from stack import Stack
 
 
 def parse(formula_string: str):
@@ -38,7 +38,7 @@ def polish_notation(parsed_formula):
     :param parsed_formula: Parsed expression as generator object (from parse function)
     :return: Generator object with expression converted in reverse polish notation (postfix notation)
     """
-    stack = StackString()
+    stack = Stack()
 
     for symbol in parsed_formula:
         if symbol in OPERATORS.keys():
@@ -59,26 +59,33 @@ def polish_notation(parsed_formula):
         yield stack.pop()
 
 
-def calculate(polish, **vars) -> float:
+def calculate(polish, **__vars) -> float:
     """
     Counting expression from reverse polish notation
     :param polish: Converted RPN expression (from polish_notation func)
-    :param vars: Values for variables in expression
-    :return:
+    :param __vars: Values for variables in expression. By default, every variable equals 1
+    :return: Float with solution
     """
-    stack = StackString()
+    stack = Stack()
 
     for symbol in polish:
         if symbol in OPERATORS.keys():
             y, x = stack.pop(), stack.pop()
             stack.push(OPERATORS[symbol][1](x, y))
         elif str(symbol) in LETTERS:
-            stack.push(vars.get(symbol, 1))
+            stack.push(__vars.get(symbol, 1))
         else:
             stack.push(symbol)
     
     return float(stack.pop())
 
 
-def evaluate(__source: str, **vars):
-    return calculate(polish_notation(parse(__source)), **vars)
+def evaluate(__source: str, **__vars):
+    """
+    Function that converts string to math expression in reverse polish notation and evaluate this
+    :param __source: String with math expression
+    :param __vars: Variables such as x, y, a, b (ordinary keywords arguments)
+    :return: Float, result of math expression
+    :raise: Exception if string doesn't contain math expression
+    """
+    return calculate(polish_notation(parse(__source)), **__vars)
